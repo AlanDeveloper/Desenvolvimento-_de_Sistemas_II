@@ -1,1 +1,0 @@
-Execute o arquivo "index.py" para iniciar o sistema

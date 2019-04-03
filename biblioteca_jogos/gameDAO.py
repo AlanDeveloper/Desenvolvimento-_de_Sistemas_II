@@ -1,3 +1,4 @@
+from game import Game
 import os
 
 class GameDAO:
@@ -55,12 +56,14 @@ class GameDAO:
         lines += [line for line in fl if line.find(';{};'.format(code)) == -1]
         fl.close()
         
-        fl = open(self._path + self._file, 'w')
-        fl.write(''.join(lines))
-        fl.close()
-        self._codeOrder()
-        
-        return 'Jogo excluído!'
+        if self._getGame(code)[0] != '':
+            fl = open(self._path + self._file, 'w')
+            fl.write(''.join(lines))
+            fl.close()
+            self._codeOrder()
+            
+            return 'Jogo excluído!'
+        else: return 'Jogo não encontrado'
 
     def _getFile(self): return self._file
     def _getGame(self, code):
@@ -75,8 +78,10 @@ class GameDAO:
         lines = list()
         for line in fl:
             line = (''.join(line)).split(';')
-            line = "Nome: {}, Código: {}, Lançamento: {}, Valor: R$ {}".format(line[0], line[1], line[2], str(line[3]).replace('.', ',').replace(',0', ',00'))
-            lines += line
+            code = line[1]
+            line = Game(line[0], line[2], line[3])
+            line._setCode(code)
+            lines += line.__str__()
 
         return ''.join(lines) if self._getNGames() > 0 else 'Nenhum jogo no arquivo'
 

@@ -7,14 +7,15 @@ class Maneger:
     def __init__(self): 
         self._control = None
         self._game = None
+        self._path = './database/'
     def _stage(self, num):
         if num == '1': self._controlFile()
         if num == '2': self._controlGame()
         if num == '3': 
             cond = input('Deseja excluir os arquivos?(S/N): ').upper()
             if cond == 'S':
-                dirs = os.listdir('./database/')
-                for file in dirs: os.remove('./database/' + file)
+                dirs = os.listdir(self._path)
+                for file in dirs: os.remove(self._path + file)
             print('Encerrando sistema...')
         return num
 
@@ -24,19 +25,19 @@ class Maneger:
             num = input('1 - Criar arquivo | 2 - Listar arquivos | 3 - Selecionar arquivo | 4 - Alterar nome do arquivo | 5 - Excluir arquivo | 6 - Voltar: ')
             if num == '1': 
                 nameFl = input('Selecione um nome para o arquivo: ') + '.txt'
-                if os.path.exists('./database/' + nameFl): 
+                if os.path.exists(self._path + nameFl): 
                     print('Arquivo já existe')
                 else: 
                     self._control = GameDAO(nameFl)
             if num == '2':
-                dirs = os.listdir('./database/')
+                dirs = os.listdir(self._path)
                 if len(dirs) > 0: 
                     for file in dirs: print(file) 
                 else: 
                     print('Pasta vazia')
             if num == '3':
                 nameFl = input('Digite o nome do arquivo: ') + '.txt'
-                if os.path.exists('./database/' + nameFl):
+                if os.path.exists(self._path + nameFl):
                     self._control = GameDAO(nameFl)
                 else: 
                     print('Arquivo não existe')
@@ -58,6 +59,8 @@ class Maneger:
             if num == '6': break
     
     def _controlGame(self):
+        print('\nAqui é possível criar seus jogos e adiciona-los aos seu(s) arquivo(s)')
+        print('\nDicas de uso:\n - Ao criar um jogo ele não é salvo no arquivo mas é possível salva-ló através da sessão "Salvar jogo"\n - Ao tentar alterar algum jogo ou até excluír, salve seu jogo antes! ')
         while True:
             num = input('\n1 - Criar jogo | 2 - Salvar jogo | 3 - Alterar jogo | 4 - Listar jogos | 5 - Excluir jogo | 6 - Voltar: ')
 
@@ -82,6 +85,7 @@ class Maneger:
             if num == '2': 
                 try:
                     print(self._control._persistence(self._game))
+                    self._game = None
                 except AttributeError:
                     print('Crie um jogo válido antes')
             if num == '3':
@@ -92,16 +96,19 @@ class Maneger:
                 if qt == 'S':
                     try:
                         newgame = self._control._getGame(input('Digite o código: '))
-                        self._game = Game(newgame[0], newgame[2], newgame[3])
-                        self._game._setCode(newgame[1])
-
-                        qt = input('1 - Nome | 2 - Lançamento | 3 - Valor: ')
-                        if qt == '1': self._game._setName(input('Selecione o novo nome: '))
-                        if qt == '2': self._game._setLaunch(input('Selecione o novo lançamento(DD-MM-YYYY): '))
-                        if qt == '3': self._game._setValue(input('Selecione o novo valor: '))
                         
-                        self._control._changeGame(self._game)
-                        print('Jogo {} alterado'.format(self._game._getName()))
+                        if newgame[0] != '':
+                            self._game = Game(newgame[0], newgame[2], newgame[3])
+                            self._game._setCode(newgame[1])
+
+                            qt = input('1 - Nome | 2 - Lançamento | 3 - Valor: ')
+                            if qt == '1': self._game._setName(input('Selecione o novo nome: '))
+                            if qt == '2': self._game._setLaunch(input('Selecione o novo lançamento(DD-MM-YYYY): '))
+                            if qt == '3': self._game._setValue(input('Selecione o novo valor: '))
+                            
+                            self._control._changeGame(self._game)
+                            print('Jogo alterado')
+                        else: print('Jogo não encontrado')
                     except AttributeError:
                         print('Selecione o arquivo atual')
                     except IndexError:
