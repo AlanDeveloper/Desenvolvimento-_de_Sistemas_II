@@ -15,7 +15,7 @@ CREATE TABLE "Trabalho" (
 	CONSTRAINT "TrabalhoPK" PRIMARY KEY ("cod"));
 
 CREATE TABLE "TrabalhoAutor" (
-	"codAutor" char(10), 
+	"codAutor" int, 
 	"codTrabalho" int,
 	CONSTRAINT "TrabalhoAutorPK" PRIMARY KEY ("codAutor","codTrabalho"), 
 	CONSTRAINT "TrabalhoAutorAutorFK" FOREIGN KEY ("codAutor") REFERENCES "Autor"("cod")

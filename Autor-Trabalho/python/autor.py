@@ -2,6 +2,7 @@ class Autor():
     def __init__(self, nome, email):
         self._nome = nome
         self._email = email
+        self._codigo = None
     
     def obterNome(self): 
         return self._nome
