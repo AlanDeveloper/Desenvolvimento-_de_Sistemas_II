@@ -11,7 +11,7 @@ class Autor():
     def obterCodigo(self): 
         return self._codigo
 
-    def alterarNome(self, nome): 
+    def alterarNome(self, nome):
         self._nome = nome
     def alterarEmail(self, email): 
         self._email = email
