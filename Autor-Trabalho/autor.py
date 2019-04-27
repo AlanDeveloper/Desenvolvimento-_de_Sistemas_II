@@ -1,9 +1,14 @@
+# -*- encoding: utf-8 -*- 
+
 class Autor():
     def __init__(self, nome, email):
         self._nome = nome
         self._email = email
         self._codigo = None
     
+    def obterAutor(self):
+        return 'Nome: {}, E-mail: {}, Código: {}'.format(self._nome,self._email, self._codigo)
+
     def obterNome(self): 
         return self._nome
     def obterEmail(self): 

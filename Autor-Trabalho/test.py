@@ -3,9 +3,11 @@
 
 from autor import Autor
 from autorDAO import autorDAO
+from trabalhoDAO import TrabalhoDAO
 from trabalho import Trabalho
 
 autorDAO = autorDAO()
+trabalhoDAO = TrabalhoDAO()
 
 autor = Autor('Alan', 'alansantos32@gmail.com')
 autorDAO.save(autor)
@@ -25,3 +27,10 @@ except AttributeError:
     print('Não encontrado')
 autorDAO.save(autor3)
 print('Salvo' if autor3 != None else 'Não salvo')
+
+
+trabalho1 = Trabalho('olá', 2, 'n sei')))
+trabalhoDAO.save(trabalho1)
+
+trabalho2 = trabalhoDAO.buscar(200)
+if trabalho2 == None: print('Não encontrado')
