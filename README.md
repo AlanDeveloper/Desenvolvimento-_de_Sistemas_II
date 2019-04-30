@@ -3,5 +3,6 @@
 Usados:
 
 - Python
+- Psycopg2 (para rodar servidor local)
 - pgAdmin III
 - PostgresSQL
