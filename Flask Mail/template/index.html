@@ -1,0 +1,15 @@
+{% extends './base.html' %}
+{% block content %}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <main>
+        <div>
+            <h3>Tente a sorte!</h3>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quibusdam temporibus nulla necessitatibus saepe iste eos! Aliquam, consequuntur totam cum deserunt doloremque earum ea non voluptate tempore. Saepe doloremque enim dicta!</p>
+        </div>
+        <form action="/register" method="post">
+            <input type="email" name="email" placeholder="Insira seu e-mail">
+            <input type="submit" value="Cadastrar">
+        </form>
+        {{ status }}
+    </main>
+{% endblock %}
