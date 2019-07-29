@@ -7,15 +7,11 @@
     <p>Descrição: {{ ideia._descricao }}</p>
 
     {% if user._cod == ideia._usuario._cod %}
-        <a href="/del" id="del">Deletar</a>
-        <a href="/alt" id="alt">Alterar</a>
+        <a href="/del/{{ ideia.cod }}" id="del">Deletar</a>
+        <a href="/alt/{{ ideia.cod }}" id="alt">Alterar</a>
         <br><br>
     {% endif %}
 
     <br>
     <a href="/ideia">Listar</a>
-    <script>
-        const search = document.querySelector('#del');
-        search.href = '/del/' + document.querySelector('#cod').value;
-    </script>
 {% endblock %}

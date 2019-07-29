@@ -1,9 +1,6 @@
-# Não consegui inserir na url os cod, por isso não é possível entrar nelas, apenas se fizer manualmente os comandos funcionam
-
-
 #!-*- conding: utf8 -*-
 
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, url_for
 from usuariodao import UsuarioDao
 from ideiadao import IdeiaDao
 from usuario import Usuario
@@ -15,6 +12,11 @@ app = Flask(__name__, template_folder='template')
 def before():
     session['logged_in'] = False
 
+@app.before_request
+def confirm():
+    if session['logged_in'] == False and request.endpoint != 'index' and request.endpoint != 'login':
+        return redirect(url_for('index'))
+        
 @app.route('/')
 def index():
     if session['logged_in'] == False:
@@ -24,17 +26,18 @@ def index():
 
 @app.route('/user', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        if session['logged_in'] == False:
-            user = Usuario(login=request.form['username'], senha=request.form['password'])
-            res = UsuarioDao().login(user)
-            if res != False:
-                user = res
-                session['logged_in'] = True
-                session['username'] = request.form['username']
-                session['password'] = request.form['password']
-            else:
-                return 'Dados incorretos'
+    try :
+        if request.method == 'POST':
+            if session['logged_in'] == False:
+                user = Usuario(login=request.form['username'], senha=request.form['password'])
+                res = UsuarioDao().login(user)
+                if res != False:
+                    user = res
+                    session['logged_in'] = True
+                    session['username'] = request.form['username']
+                    session['password'] = request.form['password']
+    except IndexError:
+        return 'Dados incorretos'
     return redirect('/')    
 
 @app.route('/exit')
@@ -51,39 +54,26 @@ def ideia():
         IdeiaDao().inserir(i)
     return redirect('/list')
 
-@app.route('/<page>')
-def view(page):
-    if session['logged_in'] == False:
-        return redirect('/')
-    if page == 'list':
-        dados = IdeiaDao().listar(10, 0)
-        return render_template(page + '.html', dados=dados)
-    return render_template(page + '.html')
-
-@app.route('/about/<cod>')
-def about(cod):
-    if session['logged_in']:
+@app.route('/<page>/<int:cod>')
+def view(page = 'list', cod = None):
+    if page == 'about':
         i = IdeiaDao().buscar(cod)
         user = Usuario(login=session['username'], senha=session['password'])
         user = UsuarioDao().login(user)
         return render_template('about.html', ideia=i, user=user)
-    return redirect('/')
-
-@app.route('/del/<cod>')
-def delete(cod):
-    if session['logged_in']:
+    if page == 'del':
         i = IdeiaDao().buscar(cod)
         IdeiaDao().excluir(i)
-    return redirect('/')
-
-@app.route('/alter/<cod>')
-def alterar(cod):
-    if session['logged_in']:
-        user = Usuario(login=session['username'], senha=session['password'])
-        user = UsuarioDao().login(user)
-        i = Ideia(titulo=request.form['title'], descricao=request.form['desc'], usuario=user, cod=cod)
-        IdeiaDao().salvar(i)
-    return redirect('/')
+    if page == 'alt':
+        if request.method == 'POST':
+            user = Usuario(login=session['username'], senha=session['password'])
+            user = UsuarioDao().login(user)
+            i = Ideia(titulo=request.form['title'], descricao=request.form['desc'], usuario=user, cod=cod)
+            IdeiaDao().alterar(i)
+        return render_template('alt.html', cod=cod)
+    if page == 'list':
+        dados = IdeiaDao().listar(10, 0)
+        return render_template(page + '.html', dados=dados)
 
 def main():
     app.secret_key = 'minha chave'

@@ -1,7 +1,7 @@
 {% extends './base.html' %}
 {% block content %}
 <h3>Altere uma ideia</h3>
-<form action="/alter" method="post">
+<form action="/alt/{{ cod }}" method="post">
     <label>Título: </label>
     <input type="text" name="title">
     <label>Descrição: </label>
