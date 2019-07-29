@@ -1,0 +1,13 @@
+{% extends './base.html' %}
+{% block content %}
+<h3>Altere uma ideia</h3>
+<form action="/alter" method="post">
+    <label>Título: </label>
+    <input type="text" name="title">
+    <label>Descrição: </label>
+    <textarea name="desc" cols="30" rows="1"></textarea>
+    <input type="submit" value="Enviar">
+</form>
+<br><br>
+<a href="/ideia">Listar</a>
+{% endblock %}

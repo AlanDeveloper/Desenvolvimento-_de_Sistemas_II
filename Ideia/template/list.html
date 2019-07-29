@@ -1,0 +1,30 @@
+{% extends './base.html' %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <td>Código</td>
+                <td>Título</td>
+                <td>Descricão</td>
+            </tr>
+        </thead>
+        {% for ideia in dados %}
+            <tr>
+                <td>{{ ideia._cod }}</td>
+                <td>{{ ideia._titulo }}</td>
+                <td>{{ ideia._descricao }}</td>
+                <td><a href="/about/" id="about" value={{ideia._cod}}>Detalhes</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br><br>
+    <a href="/insert">Adicionar</a>
+    <script>
+        const search = document.querySelectorAll('#about');
+        for (let i = 0; i < search.length; i++) {
+            search[i].addEventListener('click', () => {
+                search[i].href = '/about/' + search[i].value;
+            });
+        }
+    </script>
+{% endblock %}

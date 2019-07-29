@@ -1,0 +1,10 @@
+{% extends './base.html' %}
+{% block content %}
+    <form action="/user" method="post">
+        <label>Nome: </label>
+        <input type="text" name="username">
+        <label>Senha: </label>
+        <input type="password" name="password">
+        <input type="submit" value="Entrar">
+    </form>
+{% endblock %}
