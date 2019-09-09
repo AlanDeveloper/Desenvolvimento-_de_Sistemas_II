@@ -3,12 +3,10 @@
     <table>
             <thead>
                 <th>Nome</th>
-                <th>Email</th>
             </thead>
             {% for item in lista %}
             <tr>
                 <td>{{ item.nome }}</td>
-                <td>{{ item.email }}</td>
                 <td><a href="atualizar/{{ item.id }}">Atualizar dados</a></td>
                 <td><a href="deletar/{{ item.id }}">Deletar</a></td>
             </tr>

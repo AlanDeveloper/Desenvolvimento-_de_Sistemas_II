@@ -1,0 +1,7 @@
+{% extends './base.html' %}
+{% block content %}
+    <form action="/departamento/atualizar/{{u.id}}" method="post">
+        <input type="text" name="nome" placeholder="Digite seu nome" value="{{u.nome}}">
+        <input type="submit" value="Enviar">
+    </form>
+{% endblock %}

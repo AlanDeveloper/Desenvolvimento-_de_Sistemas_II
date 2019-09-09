@@ -1,0 +1,11 @@
+{% extends './base.html' %}
+{% block content %}
+    <form action="/usuario/entrar" method="post">
+        <input type="email" name="email" placeholder="Digite seu email" required>
+        <input type="password" name="senha" placeholder="Digite sua senha" required>
+        <input type="submit" value="Enviar">
+        {% if info != None %}
+            <p>{{info}}</p>
+        {% endif %}
+    </form>
+{% endblock %}

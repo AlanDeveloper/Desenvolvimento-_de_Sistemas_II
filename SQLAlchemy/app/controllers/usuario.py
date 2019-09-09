@@ -1,28 +1,53 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, session
+from ..models.departamento import departamento
 from ..models.usuario import usuario
 from .. import db
 import hashlib
 
-home_bp = Blueprint('home', __name__, url_prefix='/usuario', template_folder='templates')
-
-@home_bp.route('/')
-def home():
-    return render_template('usuario/home.html')
+home_bp = Blueprint('us', __name__, url_prefix='/usuario', template_folder='templates')
 
 @home_bp.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form['opt'] != '':
         resp = usuario()
         resp.nome = request.form['nome']
         resp.email = request.form['email']
         resp.senha = request.form['senha']
+        resp.idDepto = request.form['opt']
         
         db.session.add(resp)
         db.session.commit()
         return redirect('/usuario/listar')
     else:
-        return render_template('usuario/form.html')
+        lista = departamento.query.all()
+        return render_template('usuario/form.html', lista=lista)
+
+@home_bp.route('/entrar', methods=['GET', 'POST'])
+def entrar():
+    if request.method == 'POST':
+        email = request.form['email']
+        senha = request.form['senha']
+        u = usuario.query.filter_by(email=email, senha=senha).first()
+
+        if u == None:
+            return render_template('usuario/login.html', info='Usuário não encontrado')
+        else:
+            session['logged_in'] = True
+            session['nome'] = u.nome
+            session['id'] = u.id
+            return render_template('base.html')
+    else:
+        return render_template('usuario/login.html', info=None)
+
+@home_bp.route('/sair', methods=['GET','POST'])
+def sair():
+    session['logged_in'] = False
+    del session['nome']
+    del session['id']
+    
+    return redirect('/')
+
 
 @home_bp.route('/listar', methods=['GET'])
 def listar():

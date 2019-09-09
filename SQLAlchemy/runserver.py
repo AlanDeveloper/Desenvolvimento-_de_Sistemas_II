@@ -4,8 +4,9 @@ import os
 from .app import app
 from flask import redirect, session
 # BluePrints
-from flask import Blueprint
+from flask import Blueprint, render_template
 from .app.controllers.usuario import home_bp
+from .app.controllers.departamento import dep_bp
 
 # SQL Alchemy
 from .app import db
@@ -17,6 +18,7 @@ app.config['SECRET_KEY']="chave"
 db.init_app(app)
 
 app.register_blueprint(home_bp)
+app.register_blueprint(dep_bp)
 
 @app.before_first_request
 def before():
@@ -24,15 +26,5 @@ def before():
     session['logged_in'] = False
 
 @app.route('/')
-def index():
-    return redirect(home_bp.url_prefix)
-
-@app.route('/usuario/cadastrar')
-def cadastrar():
-    return redirect(home_bp.url_prefix)
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8080))
-    app.run('0.0.0.0', port=port)
-
-
+def home():
+    return render_template('base.html')
