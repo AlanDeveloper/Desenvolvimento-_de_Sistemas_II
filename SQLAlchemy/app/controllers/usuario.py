@@ -10,17 +10,16 @@ home_bp = Blueprint('us', __name__, url_prefix='/usuario', template_folder='temp
 @home_bp.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
     if request.method == 'POST' and request.form['opt'] != '':
-        resp = usuario()
-        resp.nome = request.form['nome']
-        resp.email = request.form['email']
-        resp.senha = request.form['senha']
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = request.form['senha']
+        resp = usuario(nome,email,senha)
         resp.idDepto = request.form['opt']
         
-        db.session.add(resp)
-        db.session.commit()
+        usuario.adicionar(resp)
         return redirect('/usuario/listar')
     else:
-        lista = departamento.query.all()
+        lista = departamento.listar()
         return render_template('usuario/form.html', lista=lista)
 
 @home_bp.route('/entrar', methods=['GET', 'POST'])
@@ -28,7 +27,7 @@ def entrar():
     if request.method == 'POST':
         email = request.form['email']
         senha = request.form['senha']
-        u = usuario.query.filter_by(email=email, senha=senha).first()
+        u = usuario.entrar(email, senha)
 
         if u == None:
             return render_template('usuario/login.html', info='Usuário não encontrado')
@@ -51,27 +50,25 @@ def sair():
 
 @home_bp.route('/listar', methods=['GET'])
 def listar():
-    lista = usuario.query.all()
+    lista = usuario.listar()
     return render_template('usuario/list.html', lista=lista)
 
 @home_bp.route('/deletar/<id>', methods=['GET', 'POST'])
 def deletar(id):
-    usuario.query.filter_by(id=id).delete()
-    db.session.commit()
+    usuario.deletar(id)
     return redirect('/usuario/listar')
 
 @home_bp.route('/atualizar/<id>', methods=['GET', 'POST'])
 def atualizar(id):
     if request.method == 'POST':
-        resp = usuario()
-        resp.nome = request.form['nome']
-        resp.email = request.form['email']
-        resp.senha = request.form['senha']
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = request.form['senha']
+        resp = usuario(nome,email,senha)
         resp.id = id
 
-        db.session.merge(resp)
-        db.session.commit()
+        usuario.atualizar(resp)
         return redirect('/usuario/listar')
     else:
-        u = usuario.query.filter_by(id=id).first()
+        u = usuario.buscar(id=id)
         return render_template('usuario/alt.html', u=u)
